@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
@@ -16,8 +17,8 @@ app.use('/uploads', express.static('uploads'));
 // MySQL connection
 const db = mysql.createConnection({
     host: 'localhost',
-    user: 'root', // Replace with your MySQL username
-    password: 'Thasleemmk@1230', // Replace with your MySQL password
+    user: process.env.user,
+    password: process.env.password,
     database: 'social_media'
 });
 
@@ -46,7 +47,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // JWT secret key
-const JWT_SECRET = 'your_jwt_secret_key';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Middleware to authenticate JWT
 const authenticateJWT = (req, res, next) => {
@@ -102,22 +103,6 @@ app.post('/api/posts', authenticateJWT, upload.single('image'), (req, res) => {
         res.json({ id: results.insertId });
     });
 });
-
-// Fetch all posts (sorted by popularity)
-// app.get('/api/posts', (req, res) => {
-//     const query = `
-//     SELECT posts.*, users.username, COUNT(comments.id) AS comment_count
-//     FROM posts
-//     INNER JOIN users ON posts.user_id = users.id
-//     LEFT JOIN comments ON posts.id = comments.post_id
-//     GROUP BY posts.id
-//     ORDER BY (posts.likes + comment_count) DESC
-//   `;
-//     db.query(query, (err, results) => {
-//         if (err) throw err;
-//         res.json(results);
-//     });
-// });
 
 app.get('/api/posts', authenticateJWT, (req, res) => {
     const userId = req.user ? req.user.id : null;
