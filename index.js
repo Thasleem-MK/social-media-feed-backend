@@ -154,28 +154,28 @@ app.put('/api/posts/:id/like', authenticateJWT, (req, res) => {
 
 
 // Add a comment
-app.post('/api/posts/:id/comments', authenticateJWT, (req, res) => {
-    const postId = req.params.id;
-    const { comment } = req.body;
-    const userId = req.user.id;
+// app.post('/api/posts/:id/comments', authenticateJWT, (req, res) => {
+//     const postId = req.params.id;
+//     const { comment } = req.body;
+//     const userId = req.user.id;
 
-    const query = 'INSERT INTO comments (post_id, user_id, comment) VALUES (?, ?, ?)';
-    db.query(query, [postId, userId, comment], (err, results) => {
-        if (err) throw err;
-        res.json({ id: results.insertId });
-    });
-});
+//     const query = 'INSERT INTO comments (post_id, user_id, comment) VALUES (?, ?, ?)';
+//     db.query(query, [postId, userId, comment], (err, results) => {
+//         if (err) throw err;
+//         res.json({ id: results.insertId });
+//     });
+// });
 
-// Fetch a user's own posts
-app.get('/api/my-posts', authenticateJWT, (req, res) => {
-    const userId = req.user.id;
+// // Fetch a user's own posts
+// app.get('/api/my-posts', authenticateJWT, (req, res) => {
+//     const userId = req.user.id;
 
-    const query = 'SELECT * FROM posts WHERE user_id = ?';
-    db.query(query, [userId], (err, results) => {
-        if (err) throw err;
-        res.json(results);
-    });
-});
+//     const query = 'SELECT * FROM posts WHERE user_id = ?';
+//     db.query(query, [userId], (err, results) => {
+//         if (err) throw err;
+//         res.json(results);
+//     });
+// });
 
 // Start the server
 const PORT = process.env.PORT || 5000;
